@@ -420,6 +420,6 @@ class Bill_App:
         self.root.destroy()
 
 
-root = tk.Tk()
+root = Tk()
 obj = Bill_App(root)
 root.mainloop()
