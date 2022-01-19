@@ -1,15 +1,13 @@
-from tkinter import*
 from billing_system import Bill_App
 
 def main():
-    root = Tk()
-    bill_app = Bill_App(root)
-    bill_app.sanitizer = IntVar(root, value = 3)
-    bill_app.thermal_gun = IntVar(root, value = 2)
-    bill_app.wheat = IntVar(root, value = 20)
-    bill_app.maggi = IntVar(root, value = 3)
-    bill_app.sprite = IntVar(root, value = 2)
-    bill_app.lassi = IntVar(root, value = 5)
+    bill_app = Bill_App()
+    bill_app.sanitizer = 3
+    bill_app.thermal_gun = 2
+    bill_app.wheat = 20
+    bill_app.maggi = 3
+    bill_app.sprite = 2
+    bill_app.lassi = 5
 
     bill_app.total()
 
