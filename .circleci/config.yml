@@ -98,6 +98,10 @@ workflows:
 
 
   schedule_cache_build_and_test:
+    triggers:
+      - schedule:
+          cron: "15 15 * * *"
+  
     jobs:
       - build-cache
       - test-job-1:
