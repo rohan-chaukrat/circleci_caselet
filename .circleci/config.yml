@@ -18,7 +18,34 @@ jobs:
             pip install -r requirements.txt
             python3 billing_system.py
 
+
+  test-job-1:
+    docker:
+      - image: cimg/python:3.11.4
+    steps:
+      - checkout
+      - run:
+          name: executing first test case
+          command: python3 test_billing_system_1.py
+  
+
+  test-job-2:
+    docker:
+      - image: cimg/python:3.11.4
+    steps:
+      - checkout
+      - run:
+          name: executing second test case
+          command: python3 test_billing_system_2.py
+
+
 workflows:
-  build_now:
+  build_and_test:
     jobs:
       - build
+      - test-job-1:
+          requires:
+            - build
+      - test-job-2:
+          requires:
+            - build
