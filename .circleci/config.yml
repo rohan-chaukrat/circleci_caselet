@@ -39,6 +39,18 @@ jobs:
           command: python3 test_billing_system_2.py
 
 
+  create-artifact:
+    docker:
+      - image: cimg/python:3.11.4
+    steps:
+      - checkout
+      - run:
+          name: creating an artifact and ziping it
+          command: tar -cvzf /tmp/tmp_package.tar .
+      - store_artifacts:
+          path: /tmp/tmp_package.tar
+
+
 workflows:
   build_and_test:
     jobs:
@@ -54,3 +66,6 @@ workflows:
           requires:
             - test-job-1
             - test-job-2
+      - create-artifact:
+          requires:
+            - need-approval
