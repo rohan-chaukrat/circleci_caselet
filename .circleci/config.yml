@@ -1,6 +1,6 @@
 version: 2.1
 
-jobs: 
+jobs:
   build:
     docker:
       - image: cimg/python:3.11.4
@@ -27,7 +27,7 @@ jobs:
       - run:
           name: executing first test case
           command: python3 test_billing_system_1.py
-  
+
 
   test-job-2:
     docker:
@@ -45,15 +45,60 @@ jobs:
     steps:
       - checkout
       - run:
-          name: creating an artifact and ziping it
+          name: creating an artifact and zipping it
           command: tar -cvzf /tmp/tmp_package.tar .
       - store_artifacts:
           path: /tmp/tmp_package.tar
 
 
+  build-cache:
+    docker:
+      - image: cimg/python:3.11.4
+    steps:
+      - checkout
+      - restore_cache:
+          name: restore the pip cache
+          keys:
+            - deps1-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: create virtual environment and install the dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: execute the main file
+          command: python3 billing_system.py
+      - save_cache:
+          name: saving the cache
+          key: deps1-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+
+
 workflows:
-  build_and_test:
+  build_test_approve:
     jobs:
+      - build
+      - test-job-1:
+          requires:
+            - build
+      - test-job-2:
+          requires:
+            - build
+      - need-approval:
+          type: approval
+          requires:
+            - test-job-1
+            - test-job-2
+      - create-artifact:
+          requires:
+            - need-approval
+
+
+  schedule_cache_build_and_test:
+    jobs:
+      - build-cache
       - build
       - test-job-1:
           requires:
