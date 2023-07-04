@@ -100,7 +100,7 @@ workflows:
   schedule_cache_build_and_test:
     triggers:
       - schedule:
-          cron: "15 45 * * *"
+          cron: "45 15 * * *"
           filters:
             branches:
               only:
