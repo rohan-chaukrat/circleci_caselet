@@ -52,5 +52,5 @@ workflows:
       - need-approval:
           type: approval
           requires:
-          - test-job-1
-          - test-job-2
+            - test-job-1
+            - test-job-2
