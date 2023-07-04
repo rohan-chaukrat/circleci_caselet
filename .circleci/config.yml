@@ -8,13 +8,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: creating virtual env of python
+          name: Install dependencies and execute program
           command: |
             python3 -m venv venv
             . venv/bin/activate
-      - run:
-          name: installing the packages and executing the program
-          command: |
             python3 -m pip install --upgrade pip
             pip install -r requirements.txt
             python3 billing_system.py
@@ -26,7 +23,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: executing first test case
+          name: Execute first test case
           command: python3 test_billing_system_1.py
 
   #Job to execute test case 2
@@ -36,7 +33,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: executing second test case
+          name: Execute second test case
           command: python3 test_billing_system_2.py
 
   #Job to create artifact
@@ -46,7 +43,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: creating an artifact and zipping it
+          name: Creating an artifact and zip it
           command: tar -cvzf /tmp/tmp_package.tar .
       - store_artifacts:
           path: /tmp/tmp_package.tar
@@ -58,7 +55,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          name: restore the pip cache
+          name: Restore the pip cache
           keys:
             - deps1-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
@@ -68,14 +65,13 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
       - run:
-          name: execute the main file
+          name: Execute program
           command: python3 billing_system.py
       - save_cache:
-          name: saving the cache
+          name: Save the cache
           key: deps1-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - "venv"
-
+            - venv
 
 workflows:
   build_test_approve:
@@ -96,8 +92,7 @@ workflows:
           requires:
             - need-approval
 
-
-  schedule_cache_build_and_test:
+  schedule_cache_build_test:
     triggers:
       - schedule:
           cron: "0 11 * * *"
@@ -105,7 +100,7 @@ workflows:
             branches:
               only:
                 - main
-  
+
     jobs:
       - build-cache
       - test-job-1:
