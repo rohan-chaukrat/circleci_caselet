@@ -49,3 +49,8 @@ workflows:
       - test-job-2:
           requires:
             - build
+      - need-approval:
+        type: approval
+        requires:
+          - test-job-1
+          - test-job-2
