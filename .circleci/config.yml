@@ -1,6 +1,7 @@
 version: 2.1
 
 jobs:
+  #Job to build the main file
   build:
     docker:
       - image: cimg/python:3.11.4
@@ -18,7 +19,7 @@ jobs:
             pip install -r requirements.txt
             python3 billing_system.py
 
-
+  # Job to execute test case 1
   test-job-1:
     docker:
       - image: cimg/python:3.11.4
@@ -28,7 +29,7 @@ jobs:
           name: executing first test case
           command: python3 test_billing_system_1.py
 
-
+  #Job to execute test case 2
   test-job-2:
     docker:
       - image: cimg/python:3.11.4
@@ -38,7 +39,7 @@ jobs:
           name: executing second test case
           command: python3 test_billing_system_2.py
 
-
+  #Job to create artifact
   create-artifact:
     docker:
       - image: cimg/python:3.11.4
@@ -50,7 +51,7 @@ jobs:
       - store_artifacts:
           path: /tmp/tmp_package.tar
 
-
+  #Job to save and restore cache
   build-cache:
     docker:
       - image: cimg/python:3.11.4
