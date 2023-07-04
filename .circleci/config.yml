@@ -100,17 +100,15 @@ workflows:
   schedule_cache_build_and_test:
     jobs:
       - build-cache
-      - build
       - test-job-1:
           requires:
-            - build
+            - build-cache
       - test-job-2:
           requires:
-            - build
+            - test-job-1
       - need-approval:
           type: approval
           requires:
-            - test-job-1
             - test-job-2
       - create-artifact:
           requires:
